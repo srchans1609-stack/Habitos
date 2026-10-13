@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HábitoTracker - Gestor de Hábitos</title>
+    <!-- Enlazado con estilos.css -->
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <h1>HábitoTracker</h1>
+        <nav id="menu">
+            <a href="#" id="btn-inicio">Inicio</a>
+            <a href="#" id="btn-ver-seguimiento">Ver seguimiento</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Panel de Estadísticas -->
+        <section id="panel-estadisticas" class="card">
+            <h2>Estadísticas Generales</h2>
+            <div class="stats-grid">
+                <div>Total Hábitos: <strong id="stat-total-habitos">0</strong></div>
+                <div>Días Cumplidos: <strong id="stat-cumplidos" class="text-success">0</strong></div>
+                <div>Días Fallados: <strong id="stat-fallados" class="text-danger">0</strong></div>
+            </div>
+            <button id="btn-borrar-todo" class="btn-danger">Borrar Todo</button>
+        </section>
+
+        <div class="forms-container">
+            <!-- Formulario A: Crear Hábito -->
+            <section class="card">
+                <h2>Formulario A: Crear Hábito</h2>
+                <form id="form-habito">
+                    <div class="form-group">
+                        <label for="habito-nombre">Nombre del Hábito:*</label>
+                        <input type="text" id="habito-nombre" required placeholder="Ej: Leer 20 min">
+                    </div>
+                    <div class="form-group">
+                        <label for="habito-descripcion">Descripción:</label>
+                        <input type="text" id="habito-descripcion" placeholder="Ej: Libro de programación">
+                    </div>
+                    <div class="form-group">
+                        <label for="habito-categoria">Categoría:</label>
+                        <select id="habito-categoria">
+                            <option value="Salud">Salud</option>
+                            <option value="Estudio">Estudio</option>
+                            <option value="Ocio">Ocio</option>
+                            <option value="Productividad">Productividad</option>
+                        </select>
+                    </div>
+                    <button type="submit">Crear Hábito</button>
+                </form>
+            </section>
+
+           
