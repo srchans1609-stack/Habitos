@@ -118,6 +118,74 @@ document.getElementById('form-registro')?.addEventListener('submit', function(e)
     this.reset();
 });
 
+//Modal, Tabla y Cambiar Estado
+
+
+const modal = document.getElementById('modal-seguimiento');
+const btnVerSeguimiento = document.getElementById('btn-ver-seguimiento');
+const btnCerrarModal = document.getElementById('btn-cerrar-modal');
+
+btnVerSeguimiento?.addEventListener('click', (e) => {
+    e.preventDefault();
+    renderizarTabla();
+    modal?.classList.remove('oculto');
+});
+
+btnCerrarModal?.addEventListener('click', () => {
+    modal?.classList.add('oculto');
+});
+
+modal?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        modal.classList.add('oculto');
+    }
+});
+
+function toggleCumplido(registroId) {
+    const reg = registros.find(r => r.id === registroId);
+    if (reg) {
+        reg.cumplido = !reg.cumplido;
+        guardarTodo();
+        actualizarEstadisticas();
+        renderizarTabla();
+    }
+}
+
+// Expuesta globalmente para comunicación entre ventanas si fuera necesario
+window.toggleCumplido = toggleCumplido;
+
+function renderizarTabla() {
+    const tbody = document.getElementById('tbody-registros');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+
+    registros.forEach(reg => {
+        const habitoAsociado = habitos.find(h => h.id === reg.habitoId);
+        const nombreHabito = habitoAsociado ? habitoAsociado.nombre : 'Hábito eliminado';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${nombreHabito}</td>
+            <td>${reg.fecha}</td>
+            <td>${reg.observaciones || '-'}</td>
+            <td style="color: ${reg.cumplido ? 'green' : 'red'}; font-weight: bold;">
+                ${reg.cumplido ? '✓ Cumplido' : '✗ Fallado'}
+            </td>
+            <td>
+                <button onclick="toggleCumplido(${reg.id})">Cambiar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    const cumplidos = registros.filter(r => r.cumplido).length;
+    const fallados = registros.filter(r => !r.cumplido).length;
+    const resumen = document.getElementById('resumen-modal');
+    if (resumen) {
+        resumen.textContent = `Resumen: ${cumplidos} cumplidos / ${fallados} fallados (Total: ${registros.length})`;
+    }
+}
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
