@@ -186,6 +186,37 @@ function renderizarTabla() {
         resumen.textContent = `Resumen: ${cumplidos} cumplidos / ${fallados} fallados (Total: ${registros.length})`;
     }
 }
+
+//Estadísticas y Limpieza
+
+
+function actualizarEstadisticas() {
+    const totalHabitos = document.getElementById('stat-total-habitos');
+    const cumplidosEl = document.getElementById('stat-cumplidos');
+    const falladosEl = document.getElementById('stat-fallados');
+
+    if (totalHabitos) totalHabitos.textContent = habitos.length;
+    
+    const cumplidos = registros.filter(r => r.cumplido).length;
+    const fallados = registros.filter(r => !r.cumplido).length;
+
+    if (cumplidosEl) cumplidosEl.textContent = cumplidos;
+    if (falladosEl) falladosEl.textContent = fallados;
+}
+
+document.getElementById('btn-borrar-todo')?.addEventListener('click', () => {
+    if (confirm('¿Estás seguro de borrar todos los hábitos y registros?')) {
+        borrarCookie('habitos');
+        borrarCookie('registros');
+        habitos = [];
+        registros = [];
+        actualizarDesplegableHabitos();
+        actualizarEstadisticas();
+        if (modal && !modal.classList.contains('oculto')) {
+            renderizarTabla();
+        }
+    }
+});
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
