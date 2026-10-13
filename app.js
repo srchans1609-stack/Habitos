@@ -2,9 +2,9 @@
 let habitos = [];
 let registros = [];
 
-// ==========================================
+
 // FASE 1: Persistencia con JSON y Cookies
-// ==========================================
+
 
 function guardarCookie(nombre, valor, dias = 7) {
     const jsonString = JSON.stringify(valor);
@@ -45,6 +45,78 @@ function cargarDatos() {
     registros = leerCookie('registros') || [];
 }
 
+//Formularios y Desplegable
+
+
+function actualizarDesplegableHabitos() {
+    const select = document.getElementById('registro-habito');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">-- Selecciona un hábito --</option>';
+    
+    habitos.forEach(habito => {
+        const option = document.createElement('option');
+        option.value = habito.id;
+        option.textContent = habito.nombre;
+        select.appendChild(option);
+    });
+}
+
+document.getElementById('form-habito')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nombreInput = document.getElementById('habito-nombre').value.trim();
+    const descripcion = document.getElementById('habito-descripcion').value.trim();
+    const categoria = document.getElementById('habito-categoria').value;
+
+    if (!nombreInput) {
+        alert('El nombre del hábito es obligatorio.');
+        return;
+    }
+
+    const nuevoHabito = {
+        id: Date.now(),
+        nombre: nombreInput,
+        descripcion: descripcion,
+        categoria: categoria
+    };
+
+    habitos.push(nuevoHabito);
+    guardarTodo();
+    actualizarDesplegableHabitos();
+    actualizarEstadisticas();
+    this.reset();
+});
+
+document.getElementById('form-registro')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const habitoId = document.getElementById('registro-habito').value;
+    const fecha = document.getElementById('registro-fecha').value;
+    const observaciones = document.getElementById('registro-observaciones').value.trim();
+    const cumplido = document.getElementById('registro-cumplido').checked;
+
+    if (!habitoId || !fecha) {
+        alert('Debes seleccionar un hábito y una fecha.');
+        return;
+    }
+
+    const nuevoRegistro = {
+        id: Date.now(),
+        habitoId: Number(habitoId),
+        fecha: fecha,
+        observaciones: observaciones,
+        cumplido: cumplido
+    };
+
+    registros.push(nuevoRegistro);
+    guardarTodo();
+    actualizarEstadisticas();
+    
+    const modal = document.getElementById('modal-seguimiento');
+    if (modal && !modal.classList.contains('oculto')) {
+        renderizarTabla();
+    }
+    this.reset();
+});
 
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
@@ -52,3 +124,4 @@ window.addEventListener('DOMContentLoaded', () => {
     actualizarDesplegableHabitos();
     actualizarEstadisticas();
 });
+
